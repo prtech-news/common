@@ -1,4 +1,4 @@
-module github.com/prtech-news/common
+module github.com/prtech-news/common.git
 
 go 1.15
 
