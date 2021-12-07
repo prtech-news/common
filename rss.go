@@ -4,6 +4,7 @@ package common
 import (
 	"github.com/mmcdole/gofeed"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -93,9 +94,9 @@ func FromRSSToArticle(feeds []*gofeed.Feed) []*Article {
 				&Article{
 					Title:         item.Title,
 					Link:          item.Link,
-					Source:        source,
+					Source:        urlSourceForHtml(source),
 					PubDateParsed: item.PublishedParsed,
-					PubDate:       item.Published,
+					PubDate:       removeTrailingTime(item.Published),
 				},
 			)
 		}
@@ -103,4 +104,18 @@ func FromRSSToArticle(feeds []*gofeed.Feed) []*Article {
 	}
 
 	return articles
+}
+
+func urlSourceForHtml(url string) string {
+	parts := strings.Split(url, "//")
+	if len(parts) == 2 {
+		return parts[1]
+	}
+	return url
+}
+
+func removeTrailingTime(date string) string {
+	return strings.TrimSpace(
+		strings.Replace(date, "+0000", "", 1),
+	)
 }

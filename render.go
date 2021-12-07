@@ -6,8 +6,7 @@ import (
 	"log"
 )
 
-const htmlTemplate = `
-<html op="news">
+const htmlTemplate = `<html op="news">
 <head>
     <meta name="referrer" content="origin">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,12 +14,38 @@ const htmlTemplate = `
     <link rel="shortcut icon" href="">
     <!--<link rel="alternate" type="application/rss+xml" title="RSS" href="rss">-->
     <title>Puerto Rico - Tech News</title></head>
-
+    <style>
+        /*
+        background: FDF6E3
+        header: 268bd2
+        */
+        a:link, a:hover, a:active { 
+            text-decoration: none;
+        }
+        .title .a:link {
+            color: #002b36;
+        }
+        .a:visited {
+            color: #586E75
+        }
+        .title {
+          color: #002b36;  
+        }
+        .source {
+            color: #586E75
+        }
+        .articleNumber {
+            color: #d33682;
+            width: 2rem;
+            border: 1px;
+            display: inline-block;
+        }
+    </style>
 <body>
 <center>
-    <table id="hnmain" border="0" cellpadding="0" cellspacing="0" width="85%" bgcolor="#F4F5F7">
+    <table id="hnmain" border="0" cellpadding="0" cellspacing="0" width="85%" bgcolor="#FDF6E3">
         <tr>
-            <td bgcolor="#3a91ca">
+            <td bgcolor="#268bd2">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px">
                     <tr>
                         <td style="width:18px;padding-right:4px"><a href="/prtech-news"><img
@@ -37,25 +62,23 @@ const htmlTemplate = `
         <tr>
             <td>
                 <table border="0" cellpadding="0" cellspacing="0" class="itemlist">
-                    {{range .}}
-                    <tr class='athing' id=''>
-                        <td align="right" valign="top" class="title"><span class="rank"></span>
+                    {{range $index, $element := .}}
+                    <tr class="" id="{{ increment $index }}">
+                        <td align="center" valign="top" class="articleNumber">
+                            {{ increment $index }}.
                         </td>
-                        <td valign="top" class="votelinks">
-                            <center><a id=''>
-                                <div class='votearrow' title='upvote'></div>
-                            </a></center>
-                        </td>
-                        <td class="title"><a href="{{ .Link }}" target="_blank" class="storylink">{{ .Title }}
-                        </a><span class="sitebit comhead"> (<a href="/prtech-news/from?site={{ .Source }}"
+                        <td>
+                            <a href="{{ $element.Link }}" target="_blank" class="title">{{ $element.Title }}</a>
+                            <span class=""> <a href="https://{{ $element.Source }}"
                                                                target="_blank"><span
-                                class="sitestr">{{ .Source }}</span></a>)</span></td>
+                                class="source">({{ $element.Source }})</span></a>
+                            </span>
+                        </td>
                     </tr>
-                    <tr>
-                        <td colspan="2"></td>
-                        <td class="subtext">
-                            Added by<a href="/" target="_blank" class="hnuser"> prtech.news</a> |
-                            <span class="age">Published on {{ .PubDate }}</span>
+                    <tr class="">
+                        <td colspan="1"></td>
+                        <td class="source">
+                            | <span>Published on {{ $element.PubDate }}</span>
                         </td>
                     </tr>
                     <tr class="spacer" style="height:5px"></tr>
@@ -63,8 +86,8 @@ const htmlTemplate = `
 
                     <tr class="morespace" style="height:10px"></tr>
                     <tr>
-                        <td colspan="2"></td>
-                        <td class="title"><a href="" class="morelink"
+                        <td colspan="0"></td>
+                        <td class="title"><a href="" class="title"
                                              rel="next">Top</a></td>
                     </tr>
                 </table>
@@ -94,9 +117,19 @@ const htmlTemplate = `
 </html>
 `
 
+func getFuncMap() template.FuncMap {
+	return template.FuncMap{
+		// The name "increment" is what the function will be called in the template text.
+		"increment": func(i int) int {
+			return i + 1
+		},
+	}
+}
+
 func CreateHtmlFromArticles(articles []*Article) ([]byte, error) {
 	// template.ParseFiles("views/layout.html")
-	tmpl, err := template.New("index").Parse(htmlTemplate)
+	funcMap := getFuncMap()
+	tmpl, err := template.New("index").Funcs(funcMap).Parse(htmlTemplate)
 	if err != nil {
 		return nil, err
 	}

@@ -73,7 +73,7 @@ func TestFromRSSToArticle(t *testing.T) {
 		&Article{
 			Title:         "My article title 1",
 			Link:          "https://myfeed1.com/myarticle1",
-			Source:        "https://myfeed1.com",
+			Source:        "myfeed1.com",
 			PubDateParsed: &d,
 			PubDate:       "2021-11-30",
 		},
