@@ -28,15 +28,15 @@ func TestCreateHtmlFromArticles(t *testing.T) {
 	htmlBytes, err := CreateHtmlFromArticles(articles)
 	assert.Nil(t, err)
 	assert.NotEqual(t, len(htmlBytes), 0)
-	writeToLocal(false)
+	writeToLocal(t, htmlBytes, false)
 }
 
-func writeToLocal(b bool) {
-	if !b {
+func writeToLocal(t *testing.T, bytes []byte, debug bool) {
+	if !debug {
 		return
 	}
 	f, ex := os.Create("out.html")
 	assert.Nil(t, ex)
-	_, ex2 := f.Write(htmlBytes)
+	_, ex2 := f.Write(bytes)
 	assert.Nil(t, ex2)
 }

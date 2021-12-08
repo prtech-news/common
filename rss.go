@@ -10,6 +10,7 @@ import (
 
 type Article struct {
 	Title         string     `json:"title,omitempty"`
+	Description   string     `json:description,omitempty"`
 	Link          string     `json:"link,omitempty"`
 	Source        string     `json:"source,omitempty"`
 	PubDateParsed *time.Time `json:"pubDateParsed,omitempty"`
@@ -93,6 +94,7 @@ func FromRSSToArticle(feeds []*gofeed.Feed) []*Article {
 				articles,
 				&Article{
 					Title:         item.Title,
+					Description:   item.Description,
 					Link:          item.Link,
 					Source:        urlSourceForHtml(source),
 					PubDateParsed: item.PublishedParsed,

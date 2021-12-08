@@ -106,6 +106,13 @@ func TestFilterByTitleInEnglish(t *testing.T) {
 			PubDateParsed: &t3,
 			PubDate:       "2021-11-25",
 		},
+		&Article{
+			Title:         "Puertorican caca is not in list",
+			Link:          "https://myfeed1.com/puertorican-caca-is-not-in-list",
+			Source:        "https://myfeed1.com",
+			PubDateParsed: &t3,
+			PubDate:       "2021-11-26",
+		},
 	}
 	phrases := map[string]bool{"blockchain": true, "tech": true}
 	results := FilterByTitle(sampleArticles, phrases)
@@ -139,14 +146,34 @@ func TestIsPhraseCaseInsensitiveMatch(t *testing.T) {
 }
 
 func TestIsEnglish(t *testing.T) {
-	var isWordEnglish bool
 	var text string
-
+	var description string
 	text = "Puertorican blockchain scales to new highs"
-	isWordEnglish = isEnglish(text)
-	assert.True(t, isWordEnglish, fmt.Sprintf("'%s' should be classified as english\n", text))
+	description = "blockchain in the land of chains"
+	assert.True(t, isEnglish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
 
 	text = "Juan del pueblo es un cabron"
-	isWordEnglish = isEnglish(text)
-	assert.False(t, isWordEnglish, fmt.Sprintf("'%s' should be classified as english\n", text))
+	description = "Un tipo ordinario y muy caballeroso"
+	assert.False(t, isEnglish(text, description), fmt.Sprintf("'%s' should not be classified as english\n", text))
+
+	text = "Sunrise brief: SEC investigating Tesla over alleged solar system fire negligence"
+	description = "Also on the rise: Clean energy bonds issued in California, EV charging stations with integrated advertising space, DART mission uses solar power to redirect Earthbound asteroids, and the Bezos Earth Fund supports tribal-led program."
+	assert.True(t, isEnglish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
+
+	text = "Next-generation solar technologies will drive a lower LCOE"
+	description = "Also on the rise: Clean energy bonds issued in California, EV charging stations with integrated advertising space, DART mission uses solar power to redirect Earthbound asteroids, and the Bezos Earth Fund supports tribal-led program."
+	assert.True(t, isEnglish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
+}
+
+func TestIsPuertoRicoInTitle(t *testing.T) {
+	var title string = "Puerto Rico power grid is destroyed"
+	assert.True(t, isPrMentionedInTitle(title))
+	title = "Puertorican singer top spotify artist world wide"
+	assert.True(t, isPrMentionedInTitle(title))
+	title = "Boricuas in the Bronx rebel against the system"
+	assert.True(t, isPrMentionedInTitle(title))
+	title = "SEC: Tesla system is down"
+	assert.False(t, isPrMentionedInTitle(title))
+	title = "Goldman is ripping off the U.S. national debt"
+	assert.False(t, isPrMentionedInTitle(title))
 }
