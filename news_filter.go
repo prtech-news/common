@@ -9,7 +9,7 @@ import (
 func FilterByTitle(articles []*Article, phrases map[string]bool) []*Article {
 	filtered := []*Article{}
 	for _, article := range articles {
-		if isEnglish(article.Title, article.Description) {
+		if isNotSpanish(article.Title, article.Description) {
 			if isPrMentionedInTitle(article.Title) && anyPhraseMatch(article.Title, phrases) {
 				filtered = append(filtered, article)
 			}
@@ -34,8 +34,14 @@ func isPrMentionedInTitle(title string) bool {
 	return anyPhraseMatch(title, phrases)
 }
 
+func isNotSpanish(text string, description string) bool {
+	info := whatlanggo.Detect(text + " " + description)
+	return "spanish" != strings.ToLower(info.Lang.String()) &&
+		info.Confidence*100 > 60.0
+}
+
 func isEnglish(text string, description string) bool {
-	info := whatlanggo.Detect(text + description)
+	info := whatlanggo.Detect(text + " " + description)
 	return "english" == strings.ToLower(info.Lang.String()) &&
 		info.Confidence*100 > 60.0
 }

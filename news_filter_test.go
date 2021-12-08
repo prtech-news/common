@@ -163,6 +163,34 @@ func TestIsEnglish(t *testing.T) {
 	text = "Next-generation solar technologies will drive a lower LCOE"
 	description = "Also on the rise: Clean energy bonds issued in California, EV charging stations with integrated advertising space, DART mission uses solar power to redirect Earthbound asteroids, and the Bezos Earth Fund supports tribal-led program."
 	assert.True(t, isEnglish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
+
+	text = "EVLO launches 1 MWh storage system"
+	description = "The 1 MWh system is set to make its debut suppling power to Haute-Mauricie during transmission line upgrades.</span></p><p>EVLO, a Hydro-Quebec-owned turnkey energy storage systems provider, announced the launch of the compan"
+	assert.True(t, isEnglish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
+}
+
+func TestIsNotSpanish(t *testing.T) {
+	var text string
+	var description string
+	text = "Puertorican blockchain scales to new highs"
+	description = "blockchain in the land of chains"
+	assert.True(t, isNotSpanish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
+
+	text = "Juan del pueblo es un cabron"
+	description = "Un tipo ordinario y muy caballeroso"
+	assert.False(t, isNotSpanish(text, description), fmt.Sprintf("'%s' should not be classified as english\n", text))
+
+	text = "Sunrise brief: SEC investigating Tesla over alleged solar system fire negligence"
+	description = "Also on the rise: Clean energy bonds issued in California, EV charging stations with integrated advertising space, DART mission uses solar power to redirect Earthbound asteroids, and the Bezos Earth Fund supports tribal-led program."
+	assert.True(t, isNotSpanish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
+
+	text = "Next-generation solar technologies will drive a lower LCOE"
+	description = "Also on the rise: Clean energy bonds issued in California, EV charging stations with integrated advertising space, DART mission uses solar power to redirect Earthbound asteroids, and the Bezos Earth Fund supports tribal-led program."
+	assert.True(t, isNotSpanish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
+
+	text = "EVLO launches 1 MWh storage system"
+	description = "The 1 MWh system is set to make its debut suppling power to Haute-Mauricie during transmission line upgrades.</span></p><p>EVLO, a Hydro-Quebec-owned turnkey energy storage systems provider, announced the launch of the compan"
+	assert.True(t, isNotSpanish(text, description), fmt.Sprintf("'%s' should be classified as english\n", text))
 }
 
 func TestIsPuertoRicoInTitle(t *testing.T) {
