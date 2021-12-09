@@ -10,6 +10,7 @@ const htmlTemplate = `<html op="news">
 <head>
     <meta name="referrer" content="origin">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="">
     <link rel="shortcut icon" href="">
     <!--<link rel="alternate" type="application/rss+xml" title="RSS" href="rss">-->
@@ -115,6 +116,9 @@ const htmlTemplate = `<html op="news">
         </tr>
     </table>
 </center>
+<!-- 100% privacy friendly analytics -->
+<script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 </html>
 `
