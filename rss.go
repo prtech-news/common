@@ -49,7 +49,6 @@ func ParseRSSFeedsAsync(parser *RSSFeedParser, urls []string) []*gofeed.Feed {
 
 	for i := 0; i < n; i++ {
 		go func(url string) {
-			log.Printf("Parsing RSS: %s\n", url)
 
 			feed, err := parser.ParseRSSFeed(url)
 			if err != nil {
@@ -58,7 +57,6 @@ func ParseRSSFeedsAsync(parser *RSSFeedParser, urls []string) []*gofeed.Feed {
 				return
 			}
 
-			log.Printf("RSS feed: %v\n", feed)
 			feedChan <- feed
 			done <- true
 		}(urls[i])
@@ -76,7 +74,7 @@ func ParseRSSFeedsAsync(parser *RSSFeedParser, urls []string) []*gofeed.Feed {
 		acc = append(acc, feed)
 	}
 
-	log.Printf("A total of %d RSS feeds parsed.\n", len(acc))
+	log.Printf("A total of %d/%d successfully RSS feeds parsed.\n", len(acc), n)
 	return acc
 }
 
@@ -89,6 +87,7 @@ func FromRSSToArticle(feeds []*gofeed.Feed) []*Article {
 		if source == "" {
 			source = feed.FeedLink
 		}
+		count := 0
 		for _, item := range feed.Items {
 			articles = append(
 				articles,
@@ -98,11 +97,12 @@ func FromRSSToArticle(feeds []*gofeed.Feed) []*Article {
 					Link:          item.Link,
 					Source:        urlSourceForHtml(source),
 					PubDateParsed: item.PublishedParsed,
-					PubDate:       removeTrailingTime(item.Published),
+					PubDate:       FormatDateFromTime(item.PublishedParsed),
 				},
 			)
+			count++
 		}
-
+		log.Printf("RSS url: %s; Article count: %d\n", source, count)
 	}
 
 	return articles
@@ -116,8 +116,8 @@ func urlSourceForHtml(url string) string {
 	return url
 }
 
-func removeTrailingTime(date string) string {
-	return strings.TrimSpace(
-		strings.Replace(date, "+0000", "", 1),
-	)
+// https://cs.opensource.google/go/go/+/go1.17.5:src/time/format.go;l=91
+func FormatDateFromTime(t *time.Time) string {
+	pubTime := *t
+	return pubTime.Format(time.RFC1123)
 }

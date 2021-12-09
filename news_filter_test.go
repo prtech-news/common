@@ -65,14 +65,21 @@ func init() {
 	}
 }
 
-func TestFilterByTitleSpanish(t *testing.T) {
+func TestFilterByTitle(t *testing.T) {
 	expectedArticles := []*Article{
 		&Article{
-			Title:         "Hola titulo differente",
-			Link:          "https://myfeed1.com/myarticle2",
+			Title:         "Puerto Rico is booming in tech",
+			Link:          "https://myfeed1.com/puertorico-is-booming-in-tech",
 			Source:        "https://myfeed1.com",
-			PubDateParsed: &t2,
-			PubDate:       "2021-11-30",
+			PubDateParsed: &t3,
+			PubDate:       "2021-11-25",
+		},
+		&Article{
+			Title:         "Puertorican blockchain scales to new highs",
+			Link:          "https://myfeed1.com/puertorican-blockchain-scales",
+			Source:        "https://myfeed1.com",
+			PubDateParsed: &t3,
+			PubDate:       "2021-11-25",
 		},
 		&Article{
 			Title:         "aTh Móvil collapsa en todo el país",
@@ -82,7 +89,32 @@ func TestFilterByTitleSpanish(t *testing.T) {
 			PubDate:       "2021-11-25",
 		},
 	}
-	phrases := map[string]bool{"hola": true, "ATH Móvil": true}
+	phrases := map[string]bool{"ATH Móvil": true, "tech": true, "scale": true}
+	results := FilterByTitle(sampleArticles, phrases)
+	assert.EqualValues(t, 3, len(results))
+	for index, a := range results {
+		assert.EqualValues(t, expectedArticles[index], a)
+	}
+}
+
+func TestFilterByTitleSpanish(t *testing.T) {
+	expectedArticles := []*Article{
+		&Article{
+			Title:         "Puerto Rico is booming in tech",
+			Link:          "https://myfeed1.com/puertorico-is-booming-in-tech",
+			Source:        "https://myfeed1.com",
+			PubDateParsed: &t3,
+			PubDate:       "2021-11-25",
+		},
+		&Article{
+			Title:         "aTh Móvil collapsa en todo el país",
+			Link:          "https://myfeed1.com/ath-movil",
+			Source:        "https://myfeed1.com",
+			PubDateParsed: &t3,
+			PubDate:       "2021-11-25",
+		},
+	}
+	phrases := map[string]bool{"ATH Móvil": true, "puerto rico": true}
 	results := FilterByTitle(sampleArticles, phrases)
 	assert.EqualValues(t, 2, len(results))
 	for index, a := range results {
@@ -143,6 +175,29 @@ func TestIsPhraseCaseInsensitiveMatch(t *testing.T) {
 
 	matched = isPhraseCaseInsensitiveMatch(text, "highs")
 	assert.True(t, matched, fmt.Sprintf("'%s' Should have found a match\n", text))
+	
+	matched = isPhraseCaseInsensitiveMatch(text, "pUerTorIcan")
+	assert.True(t, matched, fmt.Sprintf("'%s' Should have found a match\n", text))
+}
+
+func TestAnyPhraseMatch(t *testing.T) {
+	arr := []struct{
+		title string
+		res bool
+	}{
+		{ title: "Platzi anuncia ronda de inversión Serie B por $62 mdd", res: false},
+		{ title: "La fintech Clara se convierte en el quinto unicornio mexicano", res: true},
+		{ title: "EVLO launches 1 MWh storage system", res: false},
+		{ title: "La proptech colombiana Aptuno levanta ronda semilla de $5,1 mdd", res: false},
+		{ title: "Blockchain.com adquiere a la firma de crypto SeSocio y se expande en América Latina", res: true},
+		{ title: "Haz tus pagos a Popular desde Mi Banco Puerto Rico", res: true},
+	}
+	phrases := map[string]bool{
+		"fintech": true, "blockchain": true, "puErto Rico": true,
+	}
+	for _, obj := range arr {
+		assert.EqualValues(t, obj.res, anyPhraseMatch(obj.title, phrases))
+	}
 }
 
 func TestIsEnglish(t *testing.T) {

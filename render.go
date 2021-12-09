@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"html/template"
 	"log"
+	"time"
 )
 
-const htmlTemplate = `<html op="news">
+const htmlTemplate = `
+<html op="news">
 <head>
     <meta name="referrer" content="origin">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,6 +59,9 @@ const htmlTemplate = `<html op="news">
                         <td style="line-height:12pt; height:10px;"><span class="pagetop"><b class="hnname">
                             Puerto Rico Tech News</b></span>
                         </td>
+                        <td align="right" style="line-height:12pt; height:10px;">
+                            Updated: {{.UpdatedTime}}
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -65,7 +70,7 @@ const htmlTemplate = `<html op="news">
         <tr>
             <td>
                 <table border="0" cellpadding="0" cellspacing="0" class="itemlist">
-                    {{range $index, $element := .}}
+                    {{range $index, $element := .Articles}}
                     <tr class="" id="{{ increment $index }}">
                         <td align="center" valign="top" class="articleNumber">
                             {{ increment $index }}.
@@ -123,6 +128,11 @@ const htmlTemplate = `<html op="news">
 </html>
 `
 
+type ViewData struct {
+	Articles    []*Article
+	UpdatedTime string
+}
+
 func getFuncMap() template.FuncMap {
 	return template.FuncMap{
 		// The name "increment" is what the function will be called in the template text.
@@ -140,7 +150,13 @@ func CreateHtmlFromArticles(articles []*Article) ([]byte, error) {
 		return nil, err
 	}
 	var buf bytes.Buffer
-	tmpl.Execute(&buf, articles) // TODO verify anonymous struct syntax
+	now := time.Now().UTC()
+	vd := &ViewData{
+		Articles:    articles,
+		UpdatedTime: FormatDateFromTime(&now), //getLastUpdatedDateStr()
+	}
+
+	tmpl.Execute(&buf, vd) // TODO verify anonymous struct syntax
 	bytes := buf.Bytes()
 	log.Printf("Created HTML page with %d number of bytes\n", len(bytes))
 	return bytes, nil

@@ -15,14 +15,14 @@ func TestCreateHtmlFromArticles(t *testing.T) {
 			Link:          "https://myfeed1.com/myarticle1",
 			Source:        "myfeed1.com",
 			PubDateParsed: &d,
-			PubDate:       "Fri, 03 Dec 2021 20:23:30",
+			PubDate:       FormatDateFromTime(&d),
 		},
 		&Article{
 			Title:         "My different title 2",
 			Link:          "https://myfeed1.com/myarticle2",
 			Source:        "myfeed1.com",
 			PubDateParsed: &d,
-			PubDate:       "Fri, 43 Dec 2021 14:23:30",
+			PubDate:       FormatDateFromTime(&d),
 		},
 	}
 	htmlBytes, err := CreateHtmlFromArticles(articles)
