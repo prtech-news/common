@@ -51,6 +51,9 @@ const htmlTemplate = `
             #main {
                 width: 100%
             }
+            body {
+                margin: 0px;
+            }
         }
     </style>
 <body>

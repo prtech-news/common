@@ -175,22 +175,22 @@ func TestIsPhraseCaseInsensitiveMatch(t *testing.T) {
 
 	matched = isPhraseCaseInsensitiveMatch(text, "highs")
 	assert.True(t, matched, fmt.Sprintf("'%s' Should have found a match\n", text))
-	
+
 	matched = isPhraseCaseInsensitiveMatch(text, "pUerTorIcan")
 	assert.True(t, matched, fmt.Sprintf("'%s' Should have found a match\n", text))
 }
 
 func TestAnyPhraseMatch(t *testing.T) {
-	arr := []struct{
+	arr := []struct {
 		title string
-		res bool
+		res   bool
 	}{
-		{ title: "Platzi anuncia ronda de inversión Serie B por $62 mdd", res: false},
-		{ title: "La fintech Clara se convierte en el quinto unicornio mexicano", res: true},
-		{ title: "EVLO launches 1 MWh storage system", res: false},
-		{ title: "La proptech colombiana Aptuno levanta ronda semilla de $5,1 mdd", res: false},
-		{ title: "Blockchain.com adquiere a la firma de crypto SeSocio y se expande en América Latina", res: true},
-		{ title: "Haz tus pagos a Popular desde Mi Banco Puerto Rico", res: true},
+		{title: "Platzi anuncia ronda de inversión Serie B por $62 mdd", res: false},
+		{title: "La fintech Clara se convierte en el quinto unicornio mexicano", res: true},
+		{title: "EVLO launches 1 MWh storage system", res: false},
+		{title: "La proptech colombiana Aptuno levanta ronda semilla de $5,1 mdd", res: false},
+		{title: "Blockchain.com adquiere a la firma de crypto SeSocio y se expande en América Latina", res: true},
+		{title: "Haz tus pagos a Popular desde Mi Banco Puerto Rico", res: true},
 	}
 	phrases := map[string]bool{
 		"fintech": true, "blockchain": true, "puErto Rico": true,

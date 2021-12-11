@@ -46,8 +46,13 @@ func isPrMentionedInTitle(title string) bool {
 
 func isNotSpanish(text string, description string) bool {
 	info := whatlanggo.Detect(text + " " + description)
-	return "spanish" != strings.ToLower(info.Lang.String()) &&
-		info.Confidence*100 > 60.0
+	if "spanish" != strings.ToLower(info.Lang.String()) {
+		return true
+	}
+	if info.Confidence*100 < 60.0 {
+		return true
+	}
+	return false
 }
 
 func isEnglish(text string, description string) bool {
