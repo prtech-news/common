@@ -59,7 +59,7 @@ func TestFromRSSToArticle(t *testing.T) {
 				{
 					Title:           "My article title 1",
 					Link:            "https://myfeed1.com/myarticle1",
-					Published:       "Tue, 30 Nov 2021 00:00:00 UTC",
+					Published:       "Mon, 29 Nov 2021 20:00:00 AST",
 					PublishedParsed: &d,
 					Author: &gofeed.Person{
 						Name:  "TestUser",
@@ -75,7 +75,7 @@ func TestFromRSSToArticle(t *testing.T) {
 			Link:          "https://myfeed1.com/myarticle1",
 			Source:        "myfeed1.com",
 			PubDateParsed: &d,
-			PubDate:       "Tue, 30 Nov 2021 00:00:00 UTC",
+			PubDate:       "Mon, 29 Nov 2021 20:00:00 AST",
 		},
 	}
 	articles := FromRSSToArticle(feeds)
@@ -88,9 +88,9 @@ func TestFromRSSToArticle(t *testing.T) {
 func TestFormatDateFromTime(t *testing.T) {
 	evalTime, _ := time.Parse(
 		time.RFC1123,
-		"Thu, 09 Dec 2021 16:04:41 CST",
+		"Mon, 29 Nov 2021 19:00:00 UTC",
 	)
 	got := FormatDateFromTime(&evalTime)
-	expected := "Thu, 09 Dec 2021 16:04:41 CST"
+	expected := "Mon, 29 Nov 2021 15:00:00 AST"
 	assert.EqualValues(t, expected, got)
 }

@@ -7,22 +7,32 @@ import (
 )
 
 func FilterByTitle(articles []*Article, phrases map[string]bool) []*Article {
-	filtered := []*Article{}
+	var filtered []*Article = []*Article{}
+	seenMap := make(map[string]bool)
 	for _, article := range articles {
 		if isNotSpanish(article.Title, article.Description) {
 			if isPrMentionedInTitle(article.Title) && anyPhraseMatch(article.Title, phrases) {
-				filtered = append(filtered, article)
+				filtered = doAppend(filtered, seenMap, article)
 			}
 		} else {
 			// Assumes articles from urls in spanish are always about puerto rico
 			// since the sources should be about PR.
 			// If generalized to other topics this block should be updated
 			if anyPhraseMatch(article.Title, phrases) {
-				filtered = append(filtered, article)
+				filtered = doAppend(filtered, seenMap, article)
 			}
 		}
+		seenMap[article.Title] = true
 	}
 	return filtered
+}
+
+func doAppend(arr []*Article, seenMap map[string]bool, article *Article) []*Article {
+	_, seen := seenMap[article.Title]
+	if seen {
+		return arr
+	}
+	return append(arr, article)
 }
 
 func isPrMentionedInTitle(title string) bool {
