@@ -48,6 +48,9 @@ const htmlTemplate = `
             #ExecutionDate {
                 display: none;
             }
+            #main {
+                width: 100%
+            }
         }
     </style>
 <body>
