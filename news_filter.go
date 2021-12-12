@@ -6,12 +6,22 @@ import (
 	"strings"
 )
 
+// Values should be limited to feed / rss .xml file listed in the config.json 
+// and look for top level <Link> value
+var feedUrlWhiteList []string
+
+func init() {
+	feedUrlWhiteList = []string{
+		"joinbased.com",
+	}
+}
+
 func FilterByTitle(articles []*Article, phrases map[string]bool) []*Article {
 	var filtered []*Article = []*Article{}
 	seenMap := make(map[string]bool)
 	for _, article := range articles {
 		if isNotSpanish(article.Title, article.Description) {
-			if isPrMentionedInTitle(article.Title) && anyPhraseMatch(article.Title, phrases) {
+			if shouldAppendNonSpanishArticle(article, phrases) {
 				filtered = doAppend(filtered, seenMap, article)
 			}
 		} else {
@@ -33,6 +43,20 @@ func doAppend(arr []*Article, seenMap map[string]bool, article *Article) []*Arti
 		return arr
 	}
 	return append(arr, article)
+}
+
+func shouldAppendNonSpanishArticle(article *Article, phrases map[string]bool) bool {
+	return isWhiteListedSource(article.Source) ||
+		(isPrMentionedInTitle(article.Title) && anyPhraseMatch(article.Title, phrases))
+}
+
+func isWhiteListedSource(source string) bool {
+	for _, domain := range feedUrlWhiteList {
+		if strings.ToLower(domain) == strings.ToLower(source) {
+			return true
+		}
+	}
+	return false
 }
 
 func isPrMentionedInTitle(title string) bool {
