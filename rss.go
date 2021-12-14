@@ -108,12 +108,44 @@ func FromRSSToArticle(feeds []*gofeed.Feed) []*Article {
 	return articles
 }
 
+
 func urlSourceForHtml(url string) string {
 	parts := strings.Split(url, "//")
+	var noHttpUrl string
 	if len(parts) == 2 {
-		return parts[1]
+		noHttpUrl = parts[1]
+	} else{
+		noHttpUrl = url
+	}
+	noWWWUrl := removeWWW(noHttpUrl)
+	if isRssUrl(noWWWUrl) {
+		return convertRssUrlToTopLevelDomain(noWWWUrl)
+	}
+	return noWWWUrl
+}
+
+func removeWWW(url string) string {
+	if strings.HasPrefix(url, "www") {
+		return strings.Replace(url, "www.", "", 1)
 	}
 	return url
+}
+
+func isRssUrl(url string) bool {
+	return strings.HasPrefix(url, "rss")
+}
+
+func convertRssUrlToTopLevelDomain(url string) string {
+	//rss.politico.com/congress.xml)
+	noRssUrl := strings.Replace(url, "rss.", "", 1)
+	parts := strings.Split(noRssUrl, "/")
+	if len(parts) > 1 {
+		u := parts[0]
+		if strings.HasSuffix(u, ".com") {
+			return u
+		}
+	}
+	return noRssUrl
 }
 
 // TimeIn returns the time in UTC if the name is "" or "UTC".
