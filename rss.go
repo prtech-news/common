@@ -52,7 +52,7 @@ func ParseRSSFeedsAsync(parser *RSSFeedParser, urls []string) []*gofeed.Feed {
 
 			feed, err := parser.ParseRSSFeed(url)
 			if err != nil {
-				log.Printf("Error: %s\n", err)
+				log.Printf("Error fetching (%s): %s\n", url, err)
 				done <- true
 				return
 			}

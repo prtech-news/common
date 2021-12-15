@@ -11,7 +11,7 @@ const htmlTemplate = `
 <html op="news">
 <head>
     <meta name="referrer" content="origin">
-    <meta name="description" content="Puerto Rico and Latin america's latest tech news">
+    <meta name="description" content="Puerto Rico and Latin america's latest technology news">
     <meta name="abstract" content="Aggrate news about Puerto Rico and LatAm tech, infrastructure, and business investments. Noticias sobre inversiones, negocios, y tecnología en Puerto Rico y a través de Latino-america.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

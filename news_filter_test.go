@@ -154,7 +154,7 @@ func TestFilterByTitleInEnglish(t *testing.T) {
 	}
 }
 
-func TestIsPhraseCaseInsensitiveMatch(t *testing.T) {
+func TestIsPhraseCaseInsensitiveMatchAnscii(t *testing.T) {
 	text := "Puertorican blockchain scales to new highs"
 	var matched bool
 
@@ -179,6 +179,21 @@ func TestIsPhraseCaseInsensitiveMatch(t *testing.T) {
 	matched = isPhraseCaseInsensitiveMatch(text, "pUerTorIcan")
 	assert.True(t, matched, fmt.Sprintf("'%s' Should have found a match\n", text))
 }
+
+func TestIsPhraseCaseInsensitiveMatchUTF8(t *testing.T) {
+	text := "Startup de logística Nuvocargo recauda $20.5 mdd"
+	text2 := "Startup de logistica Nuvocargo recauda $20.5 mdd"
+	assert.EqualValues(t, 49, len(text))
+	assert.EqualValues(t, 48, len(text2))
+	var matched bool
+
+	matched = isPhraseCaseInsensitiveMatch(text, "logística")
+	assert.True(t, matched, fmt.Sprintf("'%s' Should have found a match\n", text))
+
+	matched = isPhraseCaseInsensitiveMatch(text2, "logistica")
+	assert.True(t, matched, fmt.Sprintf("'%s' Should have found a match\n", text))
+}
+
 
 func TestAnyPhraseMatch(t *testing.T) {
 	arr := []struct {
