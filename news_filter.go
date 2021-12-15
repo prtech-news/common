@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Values should be limited to feed / rss .xml file listed in the config.json 
+// Values should be limited to feed / rss .xml file listed in the config.json
 // and look for top level <Link> value
 var feedUrlWhiteList []string
 
@@ -64,6 +64,7 @@ func isPrMentionedInTitle(title string) bool {
 		"puerto rico": true,
 		"puertorican": true,
 		"boricua":     true,
+		"san juan":    true,
 	}
 	return anyPhraseMatch(title, phrases)
 }

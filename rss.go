@@ -108,13 +108,12 @@ func FromRSSToArticle(feeds []*gofeed.Feed) []*Article {
 	return articles
 }
 
-
 func urlSourceForHtml(url string) string {
 	parts := strings.Split(url, "//")
 	var noHttpUrl string
 	if len(parts) == 2 {
 		noHttpUrl = parts[1]
-	} else{
+	} else {
 		noHttpUrl = url
 	}
 	noWWWUrl := removeWWW(noHttpUrl)

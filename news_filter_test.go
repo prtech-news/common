@@ -194,7 +194,6 @@ func TestIsPhraseCaseInsensitiveMatchUTF8(t *testing.T) {
 	assert.True(t, matched, fmt.Sprintf("'%s' Should have found a match\n", text))
 }
 
-
 func TestAnyPhraseMatch(t *testing.T) {
 	arr := []struct {
 		title string
